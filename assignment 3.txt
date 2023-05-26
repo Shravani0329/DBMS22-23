@@ -1,0 +1,50 @@
+mysql> create database assignemnt3;
+Query OK, 1 row affected (0.01 sec)
+mysql> use assignemnt3;
+Database changed
+mysql> create table customer(cid int(10) primary key,cname varchar(20) not null,cmob int(10) not null,cemail varchar(50) not null );
+Query OK, 0 rows affected, 2 warnings (0.03 sec)
+mysql>  CREATE TABLE orders( fid INT PRIMARY KEY,oid INT NOT NULL,date DATE,price INT NOT NULL,quantity INT NOT NULL,cid INT,FOREIGN KEY(cid) REFERENCES customer(cid));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE menu(
+    -> fname CHAR  PRIMARY KEY,
+    -> price INT NOT NULL,
+    -> description CHAR NOT NULL,
+    -> fid INT,
+    ->  FOREIGN KEY(fid) REFERENCES orders(fid)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+mysql>  ALTER TABLE orders ADD INDEX idx_oid (oid);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE bill (
+    ->  bid INT PRIMARY KEY,
+    ->  date DATE,
+    -> oname VARCHAR(50) NOT NULL,
+    -> prtotal INT NOT NULL,
+    ->    quantity INT NOT NULL,
+    -> cid INT,
+    ->  oid INT,
+    ->  FOREIGN KEY (cid) REFERENCES customer (cid),
+    -> FOREIGN KEY (oid) REFERENCES orders (oid)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>  insert into customer(cid,cname,cmob,cemail) values(1,'sneha',937301451,'barvesneha@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(2,'shravani',987654321,'akolkarshravani@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(3,'samiksha',987234521,'bhaleraosamiksha@gmail.com');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(4,'shivangi',930134421,'joshishivangi@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql>  insert into customer(cid,cname,cmob,cemail) values(5,'payal',979867123,'benkepayal@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+mysql>  select COUNT(bid),oname from Bill GROUP BY oname ORDER BY COUNT(bid) DESC;
+Empty set (0.01 sec)
