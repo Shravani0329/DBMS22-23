@@ -1,0 +1,409 @@
+mysql> create database restaurant;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use restaurant;
+Database changed
+mysql> create table customer(
+    -> cid int(10) primary key,
+    -> cname varchar(20) not null,
+    -> cmob int(10) not null,
+    -> cemail varchar(50) not null
+    -> );
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql> CREATE TABLE orders(
+    -> fid INT PRIMARY KEY,
+    -> oid INT NOT NULL,
+    -> date DATE,
+    -> price INT NOT NULL,
+    -> quantity INT NOT NULL,
+    -> cid INT,
+    -> FOREIGN KEY(cid) REFERENCES customer(cid)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> CREATE TABLE menu(
+    -> fname CHAR  PRIMARY KEY,
+    -> price INT NOT NULL,
+    -> description CHAR NOT NULL,
+    -> fid INT,
+    -> FOREIGN KEY(fid) REFERENCES `order`(fid)
+    -> );
+mysql> CREATE TABLE menu(
+    -> fname CHAR  PRIMARY KEY,
+    -> price INT NOT NULL,
+    -> description CHAR NOT NULL,
+    -> fid INT,
+    -> FOREIGN KEY(fid) REFERENCES orders(fid)
+    -> );CREATE TABLE menu(
+Query OK, 0 rows affected (0.03 sec)
+
+
+
+
+mysql> ALTER TABLE orders ADD INDEX idx_oid (oid);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE bill (
+    -> bid INT PRIMARY KEY,
+    -> date DATE,
+    -> oname VARCHAR(50) NOT NULL,
+    -> prtotal INT NOT NULL,
+    -> quantity INT NOT NULL,
+    -> cid INT,
+    -> oid INT,
+    -> FOREIGN KEY (cid) REFERENCES customer (cid),
+    -> FOREIGN KEY (oid) REFERENCES orders (oid)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> CREATE TABLE payment(
+    -> paymethod CHAR NOT NULL,
+    -> date DATE,
+    -> time TIME,
+    -> total INT NOT NULL,
+    -> cid INT,
+    -> bid INT,
+    -> FOREIGN KEY(cid) REFERENCES customer(cid),
+    -> FOREIGN KEY(bid) REFERENCES bill(bid)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(1,'sneha',937301451,'barvesneha@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(1,'shravani',987654321,'akolkarshravani@gmail.com');
+ERROR 1062 (23000): Duplicate entry '1' for key 'customer.PRIMARY'
+mysql> insert into customer(cid,cname,cmob,cemail) values(2,'shravani',987654321,'akolkarshravani@gmail.com');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(3,'samiksha',987234521,'bhaleraosamiksha@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(4,'shivangi',930134421,joshishivangi@gmail.com');
+    '>
+    '> ^C
+mysql> insert into customer(cid,cname,cmob,cemail) values(4,'shivangi',930134421,'joshishivangi@gmail.com');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into customer(cid,cname,cmob,cemail) values(5,'payal',979867123,'benkepayal@gmail.com');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from customer;
++-----+----------+-----------+----------------------------+
+| cid | cname    | cmob      | cemail                     |
++-----+----------+-----------+----------------------------+
+|   1 | sneha    | 937301451 | barvesneha@gmail.com       |
+|   2 | shravani | 987654321 | akolkarshravani@gmail.com  |
+|   3 | samiksha | 987234521 | bhaleraosamiksha@gmail.com |
+|   4 | shivangi | 930134421 | joshishivangi@gmail.com    |
+|   5 | payal    | 979867123 | benkepayal@gmail.com       |
++-----+----------+-----------+----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into orders (fid,oid,date,price,quantity,cid) values(11,21,'2023-04-01',200,4,1);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into orders (fid,oid,date,price,quantity,cid) values(12,22,'2023-05-02',300,5,2);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into orders (fid,oid,date,price,quantity,cid) values(13,23,'2023-05-12',100,3,3);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into orders (fid,oid,date,price,quantity,cid) values(14,24,'2023-06-2',102,3,4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from orders;
++-----+-----+------------+-------+----------+------+
+| fid | oid | date       | price | quantity | cid  |
++-----+-----+------------+-------+----------+------+
+|  11 |  21 | 2023-04-01 |   200 |        4 |    1 |
+|  12 |  22 | 2023-05-02 |   300 |        5 |    2 |
+|  13 |  23 | 2023-05-12 |   100 |        3 |    3 |
+|  14 |  24 | 2023-06-02 |   102 |        3 |    4 |
++-----+-----+------------+-------+----------+------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE menu MODIFY COLUMN fname VARCHAR(255);
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE menu MODIFY COLUMN description VARCHAR(255);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into menu(fname,price,description,fid) values('pizza',120,'goodtaste',11);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into menu(fname,price,description,fid) values('icecream',40,'goodtaste',12);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into menu(fname,price,description,fid) values('coldcoffee',50,'verytasty',13);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into menu(fname,price,description,fid) values('burger',80,'verytasty',14);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from menu;
++------------+-------+-------------+------+
+| fname      | price | description | fid  |
++------------+-------+-------------+------+
+| burger     |    80 | verytasty   |   14 |
+| coldcoffee |    50 | verytasty   |   13 |
+| icecream   |    40 | goodtaste   |   12 |
+| pizza      |   120 | goodtaste   |   11 |
++------------+-------+-------------+------+
+4 rows in set (0.00 sec)
+
+mysql> insert into Bill(bid,date,oname,prtotal,quantity,cid,oid) values(201,'2023-06-02','pizza',400,2,1,21);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Bill(bid,date,oname,prtotal,quantity,cid,oid) values(202,'2023-06-01','coldcoffee',400,4,2,22);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Bill(bid,date,oname,prtotal,quantity,cid,oid) values(203,'2023-08-01','coldcoffee',250,5,3,23);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Bill(bid,date,oname,prtotal,quantity,cid,oid) values(204,'2023-08-07','icecream',240,6,4,24);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from Bill;
++-----+------------+------------+---------+----------+------+------+
+| bid | date       | oname      | prtotal | quantity | cid  | oid  |
++-----+------------+------------+---------+----------+------+------+
+| 201 | 2023-06-02 | pizza      |     400 |        2 |    1 |   21 |
+| 202 | 2023-06-01 | coldcoffee |     400 |        4 |    2 |   22 |
+| 203 | 2023-08-01 | coldcoffee |     250 |        5 |    3 |   23 |
+| 204 | 2023-08-07 | icecream   |     240 |        6 |    4 |   24 |
++-----+------------+------------+---------+----------+------+------+
+4 rows in set (0.00 sec)
+
+
+mysql> ALTER TABLE payment MODIFY COLUMN paymethod VARCHAR(50);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into payment (paymethod,date,time,total,cid,bid) values('card','2023-06-02','10:05:05',1200,1,201);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into payment (paymethod,date,time,total,cid,bid) values('online','2023-06-01','10:05:30',1000,2,202);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into payment (paymethod,date,time,total,cid,bid) values('online','2023-08-01','11:05:30',2000,3,203);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into payment (paymethod,date,time,total,cid,bid) values('card','2023-08-07','11:05:50',2230,4,204);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from payment;
++-----------+------------+----------+-------+------+------+
+| paymethod | date       | time     | total | cid  | bid  |
++-----------+------------+----------+-------+------+------+
+| card      | 2023-06-02 | 10:05:05 |  1200 |    1 |  201 |
+| online    | 2023-06-01 | 10:05:30 |  1000 |    2 |  202 |
+| online    | 2023-08-01 | 11:05:30 |  2000 |    3 |  203 |
+| card      | 2023-08-07 | 11:05:50 |  2230 |    4 |  204 |
++-----------+------------+----------+-------+------+------+
+4 rows in set (0.00 sec)
+
+
+mysql> update customer set
+    -> cname='neha',
+    -> cmob=940337154
+    -> where cid=1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from customer;
++-----+----------+-----------+----------------------------+
+| cid | cname    | cmob      | cemail                     |
++-----+----------+-----------+----------------------------+
+|   1 | neha     | 940337154 | barvesneha@gmail.com       |
+|   2 | shravani | 987654321 | akolkarshravani@gmail.com  |
+|   3 | samiksha | 987234521 | bhaleraosamiksha@gmail.com |
+|   4 | shivangi | 930134421 | joshishivangi@gmail.com    |
+|   5 | payal    | 979867123 | benkepayal@gmail.com       |
++-----+----------+-----------+----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> update payment set
+    -> date='2023-01-24',
+    -> total=3000
+    -> where cid=3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from payment;
++-----------+------------+----------+-------+------+------+
+| paymethod | date       | time     | total | cid  | bid  |
++-----------+------------+----------+-------+------+------+
+| card      | 2023-06-02 | 10:05:05 |  1200 |    1 |  201 |
+| online    | 2023-06-01 | 10:05:30 |  1000 |    2 |  202 |
+| online    | 2023-01-24 | 11:05:30 |  3000 |    3 |  203 |
+| card      | 2023-08-07 | 11:05:50 |  2230 |    4 |  204 |
++-----------+------------+----------+-------+------+------+
+4 rows in set (0.00 sec)
+
+
+mysql> rename table customer to cust;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from cust;
++-----+----------+-----------+----------------------------+
+| cid | cname    | cmob      | cemail                     |
++-----+----------+-----------+----------------------------+
+|   1 | neha     | 940337154 | barvesneha@gmail.com       |
+|   2 | shravani | 987654321 | akolkarshravani@gmail.com  |
+|   3 | samiksha | 987234521 | bhaleraosamiksha@gmail.com |
+|   4 | shivangi | 930134421 | joshishivangi@gmail.com    |
+|   5 | payal    | 979867123 | benkepayal@gmail.com       |
++-----+----------+-----------+----------------------------+
+5 rows in set (0.00 sec)
+
+Queries:
+1)Disply all customer names:
+mysql> select cname from customer;
++----------+
+| cname    |
++----------+
+| neha     |
+| shravani |
+| samiksha |
+| shivangi |
+| payal    |
++----------+
+5 rows in set (0.03 sec)
+
+2)List all food names:
+mysql> select fname from menu;
++------------+
+| fname      |
++------------+
+| pizza      |
+| icecream   |
+| coldcoffee |
+| burger     |
++------------+
+4 rows in set (0.01 sec)
+
+3)what is the price of burger?
+mysql> select price from menu where fname='burger' and fid=14;
++-------+
+| price |
++-------+
+|    80 |
++-------+
+1 row in set (0.00 sec)
+
+4)On which date customer with bid 201 purchased the pizza?
+mysql> select date from Bill where bid=201 and oid=21;
++------------+
+| date       |
++------------+
+| 2023-06-02 |
++------------+
+1 row in set (0.01 sec)
+
+5)Display the food name with price Rs.120
+mysql> select fname from menu where price=120;
++-------+
+| fname |
++-------+
+| pizza |
++-------+
+1 row in set (0.00 sec)
+
+6)mysql> select fname from menu where fid=13;
++------------+
+| fname      |
++------------+
+| coldcoffee |
++------------+
+1 row in set (0.00 sec)
+
+7)Select customer name with cmob=987654321
+mysql> select cname from customer where cmob=987654321;
++----------+
+| cname    |
++----------+
+| shravani |
++----------+
+1 row in set (0.00 sec)
+
+8)Display the number of menu 
+mysql> select count(*) from menu;
++----------+
+| count(*) |
++----------+
+|        4 |
++----------+
+1 row in set (0.01 sec)
+
+9)Display the number of menu with minimum price
+mysql> select min(price) from menu;
++------------+
+| min(price) |
++------------+
+|         40 |
++------------+
+1 row in set (0.00 sec)
+
+10)mysql> select fname from menu where price=(select min(price) from menu);
++----------+
+| fname    |
++----------+
+| icecream |
++----------+
+1 row in set (0.00 sec)
+
+mysql> create view pizza as select * from menu where fname='pizza';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from pizza;
++-------+-------+-------------+------+
+| fname | price | description | fid  |
++-------+-------+-------------+------+
+| pizza |   120 | goodtaste   |   11 |
++-------+-------+-------------+------+
+1 row in set (0.00 sec)
+
+mysql> select fname from menu WHERE price BETWEEN 50 AND 120;
++------------+
+| fname      |
++------------+
+| burger     |
+| coldcoffee |
+| pizza      |
++------------+
+3 rows in set (0.00 sec)
+
+mysql> select cname from customer WHERE cname LIKE'____';
++-------+
+| cname |
++-------+
+| neha  |
++-------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
