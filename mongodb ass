@@ -1,0 +1,88 @@
+$ mongo
+> show dbs;
+New146    0.000GB
+Rn_101    0.000GB
+Student   0.000GB
+XYZ       0.000GB
+admin     0.000GB
+company   0.000GB
+config    0.000GB
+db1       0.000GB
+employee  0.000GB
+local     0.000GB
+locker    0.000GB
+pankaj    0.000GB
+product   0.000GB
+r         0.000GB
+r_101     0.000GB
+saru      0.000GB
+srd       0.000GB
+test      0.000GB
+> use employee;
+switched to db employee
+> show collections;
+product
+> db.product.insert({pid:11,pname:"pizza",price:120,description:"good"});
+WriteResult({ "nInserted" : 1 })
+> db.product.insert({pid:12,pname:"icecream",price:80,description:"good"});
+WriteResult({ "nInserted" : 1 })
+> db.product.insert({pid:13,pname:"coldcoffee",price:70,description:"very good"});
+WriteResult({ "nInserted" : 1 })
+> db.product.insert({pid:14,pname:"burger",price:100,description:"very tasty"});
+WriteResult({ "nInserted" : 1 })
+> db.product.find().pretty();
+{
+	"_id" : ObjectId("646d9b67d720f1b719aab8ea"),
+	"pid" : 11,
+	"pname" : "pizza",
+	"price" : 120,
+	"description" : "good"
+}
+{
+	"_id" : ObjectId("646d9bb2d720f1b719aab8eb"),
+	"pid" : 12,
+	"pname" : "icecream",
+	"price" : 80,
+	"description" : "good"
+}
+{
+	"_id" : ObjectId("646d9bf3d720f1b719aab8ec"),
+	"pid" : 13,
+	"pname" : "coldcoffee",
+	"price" : 70,
+	"description" : "very good"
+}
+{
+	"_id" : ObjectId("646d9c20d720f1b719aab8ed"),
+	"pid" : 14,
+	"pname" : "burger",
+	"price" : 100,
+	"description" : "very tasty"
+}
+> db.product.remove({pname:"burger"});
+WriteResult({ "nRemoved" : 1 })
+> db.product.update({pid:11},{$set:{price:150}},{multi:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.product.find().pretty();
+{
+	"_id" : ObjectId("646d9b67d720f1b719aab8ea"),
+	"pid" : 11,
+	"pname" : "pizza",
+	"price" : 150,
+	"description" : "good"
+}
+{
+	"_id" : ObjectId("646d9bb2d720f1b719aab8eb"),
+	"pid" : 12,
+	"pname" : "icecream",
+	"price" : 80,
+	"description" : "good"
+}
+{
+	"_id" : ObjectId("646d9bf3d720f1b719aab8ec"),
+	"pid" : 13,
+	"pname" : "coldcoffee",
+	"price" : 70,
+	"description" : "very good"
+}
+
